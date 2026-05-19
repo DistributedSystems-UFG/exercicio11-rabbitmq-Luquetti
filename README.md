@@ -41,3 +41,31 @@ pip install rabbitpy
 ```
 
 *Note:* Make sure the IP address of the RabbitMQ server is correctly set in const.py
+
+
+# Exercício 11 — RabbitMQ
+
+## Arquitetura
+produtor_sensor.py   → fila: leituras → consumidor_processador.py
+                                       → consumidor_historico.py
+produtor_alertas.py  → fila: leituras → (mesmos consumidores)
+                     → fila: alertas  → consumidor_alertas.py
+                                      → consumidor_historico.py
+
+## Instalação
+pip install rabbitpy
+
+## Configuração
+Edite const.py com o IP do servidor RabbitMQ.
+
+## Setup no servidor (uma vez só)
+sudo rabbitmqctl add_user myuser abc123
+sudo rabbitmqctl add_vhost my_vhost
+sudo rabbitmqctl set_permissions -p my_vhost myuser ".*" ".*" ".*"
+
+## Execução (terminais separados)
+python3 consumidor_processador.py
+python3 consumidor_alertas.py
+python3 consumidor_historico.py
+python3 produtor_sensor.py
+python3 produtor_alertas.py
